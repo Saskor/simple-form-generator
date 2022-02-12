@@ -1,0 +1,8 @@
+Не создавать несколько компонентов в одном файле (не относится к классам ошибок).
+Оптимизация рендеров с помощью shouldComponenentUpdate.
+Event handler from props onChange, from inner method handleChange
+
+крупные пакеты в ящике под сортировку мусора
+
+Farrow and Ball 269
+Little Green 7-8P

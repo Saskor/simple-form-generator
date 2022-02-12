@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "allowJs": false,
+    "alwaysStrict": true,
+    "baseUrl": "src",
+    "paths": {
+      "*": ["*", "src/*"]
+    },
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "react",
+    "forceConsistentCasingInFileNames": true,
+    "module": "es6",
+    "moduleResolution": "Node",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "outDir": "./dist/ts-out/",
+    "resolveJsonModule": true,
+    "target": "ES5",
+    "useDefineForClassFields": true,
+    "sourceMap": true,
+    "strict": true
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
