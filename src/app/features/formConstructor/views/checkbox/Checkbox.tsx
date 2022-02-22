@@ -4,7 +4,7 @@ export const Checkbox = (
   {
     name,
     label,
-    required
+    required = false
   }
 : {
   name: string,

@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.containerFieldsSettings {
+  display: flex;
+  flex-direction: column;
+}
+
+.containerAddButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.addButton {
+  font-size: 15px;
+  padding: 5px 10px;
+}

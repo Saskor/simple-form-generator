@@ -3,7 +3,7 @@ import React from "react";
 export const Input = ({
   name,
   label,
-  required,
+  required = false,
   type,
   placeholder
 }: {

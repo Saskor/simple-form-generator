@@ -8,7 +8,7 @@ type Option = {
 export const Select = ({
   name,
   label: labelText,
-  required,
+  required = false,
   options
 }: {
   name: string,

@@ -5,6 +5,8 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const OptimizeCssAssetWebpackPlugin = require("optimize-css-assets-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -31,12 +33,13 @@ const filename = ext => (isDev ? `[name].${ext}` : `[name].[hash].${ext}`);
 
 const cssLoaders = (extra = "") => {
   const loaders = [
-    "style-loader",
+    isDev ? "style-loader" : MiniCssExtractPlugin.loader,
     {
       loader: "css-loader",
       options: {
+        importLoaders: 1,
         modules: {
-          localIdentName: isDev ? "[path]-[local]" : "[sha1:hash:hex:4]"
+          localIdentName: "[name]__[local]--[hash:base64:5]"
         }
       }
     }
@@ -101,7 +104,13 @@ const plugins = () => {
     })
   ];
 
+  if (isDev) {
+    // only enable hot in development
+    base.push(new webpack.HotModuleReplacementPlugin());
+  }
+
   if (!isDev) {
+    base.push(new MiniCssExtractPlugin());
     base.push(new BundleAnalyzerPlugin());
   }
 
@@ -119,7 +128,7 @@ module.exports = {
   },
   resolve: {
     extensions: [ ".ts", ".tsx", ".js", ".jsx", ".css", ".scss" ],
-    modules: [ "src", "node_modules" ]
+    modules: [ path.resolve(__dirname, "src"), "node_modules" ]
   },
   optimization: optimization(),
   devServer: {

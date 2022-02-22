@@ -1,15 +1,27 @@
 import React from "react";
+import cn from "classnames";
+import styles from "./Button.scss";
+
+type ButtonProps = {
+  type: "button" | "submit" | "reset";
+  text: string;
+  classNames: string;
+  onClick?: () => void;
+};
 
 export const Button = (
   {
     type,
-    text
-  }: {
-  type?: "button" | "submit",
-  text: string
-}
+    text,
+    classNames,
+    onClick
+  }: ButtonProps
 ) => (
-  <button {...type && { type }}>
+  <button
+    className={cn(styles.button, classNames)}
+    type={type}
+    onClick={onClick}
+  >
     <span>{text}</span>
   </button>
 );
