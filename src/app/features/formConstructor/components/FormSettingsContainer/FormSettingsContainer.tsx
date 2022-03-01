@@ -1,37 +1,37 @@
 import React from "react";
 import { observer } from "mobx-react";
 import cn from "classnames";
-import { FormConstructorServiceType } from "../../services/FormConstructorModel";
-import { Button } from "../../views/button/Button";
-import { FormSettingsField } from "../FormSettingsField";
-import styles from "./FormSettings.scss";
+import {
+  FormConstructorService,
+  FormConstructorServiceType
+} from "../../services/FormConstructorModel";
+import { FormField } from "../FormField";
+import styles from "./FormSettingsContainer.scss";
+import { Button } from "app/shared/components/Button";
 
-export const FormSettings = observer((
+export const FormSettingsContainer = observer((
   { formConstructorModel }: { formConstructorModel: FormConstructorServiceType }
 ) => {
   const {
     fields,
+    buttons,
     fieldAdd,
-    fieldSettingChange,
-    fieldDelete,
-    itemShiftBackward,
-    itemShiftForward
+    buttonAdd
   } = formConstructorModel;
 
   return (
     <div className={cn(styles.container)}>
+      <div className={cn(styles.title)}>Form fields</div>
       <div className={cn(styles.containerFieldsSettings)}>
         {fields.map(field => (
-          <FormSettingsField
+          <FormField
             key={field.id}
             field={field}
-            fieldSettingChange={fieldSettingChange}
-            fieldDelete={fieldDelete}
-            fieldMoveUp={itemShiftBackward}
-            fieldMoveDown={itemShiftForward}
+            formConstructorModel={FormConstructorService}
           />
         ))}
       </div>
+      <div className={cn(styles.title)}>Form buttons</div>
       <div className={cn(styles.containerAddButtons)}>
         <Button
           type={"button"}
@@ -43,7 +43,7 @@ export const FormSettings = observer((
           type={"button"}
           text="Add button"
           classNames={cn(styles.addButton)}
-          onClick={fieldAdd}
+          onClick={buttonAdd}
         />
       </ div>
     </ div>

@@ -3,6 +3,13 @@
   flex-direction: column;
 }
 
+.title {
+  font-size: 18px;
+  text-align: center;
+  display: flex;
+  margin: 10px 0;
+}
+
 .containerFieldsSettings {
   display: flex;
   flex-direction: column;

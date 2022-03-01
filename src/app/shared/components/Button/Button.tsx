@@ -6,18 +6,21 @@ type ButtonProps = {
   type: "button" | "submit" | "reset";
   text: string;
   classNames: string;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 };
 
 export const Button = (
   {
     type,
     text,
-    classNames
+    classNames,
+    onClick
   }: ButtonProps
 ) => (
   <button
     className={cn(styles.button, classNames)}
     type={type}
+    onClick={onClick}
   >
     <span>{text}</span>
   </button>

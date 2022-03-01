@@ -4,12 +4,12 @@ import Select, { ActionMeta, OnChangeValue } from "react-select";
 
 import styles from "./Selector.scss";
 
-type Option = {id: string, value: string, label: string};
+type Option = {value: string, label: string};
 type SelectProps = {
   label: string;
   value: Option;
   options: Array<Option> | undefined;
-  disabled: boolean;
+  disabled?: boolean;
   onChange: (
     value: OnChangeValue<Option, false>,
     actionMeta: ActionMeta<Option>

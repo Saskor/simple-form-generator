@@ -169,13 +169,7 @@ module.exports = {
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: "awesome-typescript-loader",
-        options: {
-          useTranspileModule: true,
-          forceIsolatedModules: true,
-          transpileOnly: !isDev
-        }
-
+        use: "ts-loader"
       }
     ]
   }

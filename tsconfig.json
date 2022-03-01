@@ -17,7 +17,7 @@
     "noImplicitReturns": true,
     "outDir": "./dist/ts-out/",
     "resolveJsonModule": true,
-    "target": "ES5",
+    "target": "es5",
     "useDefineForClassFields": true,
     "sourceMap": true,
     "strict": true
