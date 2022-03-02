@@ -41,6 +41,20 @@ export const FormField = observer((
     editFormShow,
     setEditFormShow
   ] = React.useState<boolean>(false);
+  const [
+    fieldType,
+    setFieldType
+  ] = React.useState(FIELD_TYPE_SELECTOR_OPTIONS[0]);
+  const [
+    sortedSettingsNames,
+    setSortedSettingsNames
+  ] = React.useState<Array<string>>([]);
+
+  React.useEffect(() => {
+    setSortedSettingsNames(
+      sortSettingsNamesByOrder(field.settings)
+    );
+  }, []);
 
   const moveUp = React.useCallback(
     () => fieldMoveUp(field.id), [ field.id ]
@@ -56,13 +70,6 @@ export const FormField = observer((
   const onDelete = React.useCallback(
     () => fieldDelete(field.id), [ field.id ]
   );
-
-  const [ fieldType, setFieldType ] = React.useState(FIELD_TYPE_SELECTOR_OPTIONS[0]);
-
-  const [ sortedSettingsNames, setSortedSettingsNames ] = React.useState<
-    Array<string>
-    >([]);
-
   const onFieldTypeChange = React.useCallback(
     newValue => {
       setFieldType(newValue);
@@ -74,12 +81,6 @@ export const FormField = observer((
       fieldTypeChange(field.id, newValue);
     }, [ field.id ]
   );
-
-  React.useEffect(() => {
-    setSortedSettingsNames(
-      sortSettingsNamesByOrder(field.settings)
-    );
-  }, [ field ]);
 
   return (
     <div className={cn(styles.field)} key={field.id}>
