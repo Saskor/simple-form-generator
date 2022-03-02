@@ -2,7 +2,8 @@ import React from "react";
 import cn from "classnames";
 import {
   FormFieldOptionChangeArgs,
-  SelectOption
+  SelectOption,
+  FormConstructorService
 } from "../../services/FormConstructorModel";
 import { LABEL, VALUE } from "../../constants/FormConstructor";
 import { ManageButtons } from "../ManageButtons";
@@ -15,33 +16,20 @@ export type ListItemCallback = (fieldId: string, optionId: string) => (
 
 type FieldOptionProps = {
   selectOption: SelectOption;
-  onListItemMoveDown: ListItemCallback;
-  onListItemMoveUp: ListItemCallback;
-  // delete row to some model
-  onListItemDelete: ListItemCallback;
-  // callback that processed changes in the ListItem
-  onListItemChange: (
-    {
-      fieldId,
-      optionId,
-      optionSettingKey
-    }: FormFieldOptionChangeArgs
-  ) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => void;
   // show delete button on the right of row controls
   showDeleteButton?: boolean;
 };
 
 export const FieldOption = (
-  {
-    selectOption,
-    onListItemMoveDown,
-    onListItemMoveUp,
-    onListItemDelete,
-    onListItemChange
-  }: FieldOptionProps
+  { selectOption }: FieldOptionProps
 ) => {
+  const {
+    optionMoveDown,
+    optionMoveUp,
+    optionDelete,
+    optionSettingChange
+  } = FormConstructorService;
+
   const {
     id: optionId,
     fieldId,
@@ -52,30 +40,42 @@ export const FieldOption = (
   } = selectOption;
 
   const onItemMoveDown = React.useCallback(
-    onListItemMoveDown(fieldId, optionId),
+    (
+      event: React.MouseEvent<HTMLElement>
+    ) => optionMoveDown(fieldId, optionId),
     [ optionId ]
   );
   const onItemMoveUp = React.useCallback(
-    onListItemMoveUp(fieldId, optionId),
+    (
+      event: React.MouseEvent<HTMLElement>
+    ) => optionMoveUp(fieldId, optionId),
     [ optionId ]
   );
   const onItemDelete = React.useCallback(
-    onListItemDelete(fieldId, optionId),
+    (
+      event: React.MouseEvent<HTMLElement>
+    ) => optionDelete(fieldId, optionId),
     [ optionId ]
   );
   const onLabelChange = React.useCallback(
-    onListItemChange({
+    (
+      event: React.ChangeEvent<HTMLInputElement>
+    ) => optionSettingChange({
       fieldId,
       optionId,
-      optionSettingKey: LABEL
+      optionSettingKey: LABEL,
+      optionSettingValue: event.target.value
     }),
     [ optionId ]
   );
   const onValueChange = React.useCallback(
-    onListItemChange({
+    (
+      event: React.ChangeEvent<HTMLInputElement>
+    ) => optionSettingChange({
       fieldId,
       optionId,
-      optionSettingKey: VALUE
+      optionSettingKey: VALUE,
+      optionSettingValue: event.target.value
     }),
     [ optionId ]
   );

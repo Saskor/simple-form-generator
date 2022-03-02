@@ -4,11 +4,10 @@ import cn from "classnames";
 import {
   Field,
   FieldType,
-  FormConstructorServiceType,
-  FormFieldOptionChangeArgs
+  FormConstructorServiceType
 } from "../../services/FormConstructorModel";
 import {
-  DEFAULT_FIELDS_SETTINGS_BY_FIELD_TYPE, FIELD_TYPE,
+  DEFAULT_FIELDS_SETTINGS_BY_FIELD_TYPE,
   FIELD_TYPE_SELECTOR_OPTIONS,
   SETTINGS
 } from "../../constants/FormConstructor";
@@ -35,12 +34,7 @@ export const FormField = observer((
     fieldDelete,
     fieldMoveUp,
     fieldMoveDown,
-    sortSettingsNamesByOrder,
-    optionAdd,
-    optionMoveDown,
-    optionMoveUp,
-    optionDelete,
-    optionSettingChange
+    sortSettingsNamesByOrder
   } = formConstructorModel;
 
   const [
@@ -61,47 +55,6 @@ export const FormField = observer((
   );
   const onDelete = React.useCallback(
     () => fieldDelete(field.id), [ field.id ]
-  );
-
-  const onListItemAdd = React.useCallback(
-    (fieldId: string) => (
-      event: React.MouseEvent<HTMLElement>
-    ) => optionAdd(fieldId),
-    [ field.id ]
-  );
-  const onListItemMoveDown = React.useCallback(
-    (fieldId: string, optionId: string) => (
-      event: React.MouseEvent<HTMLElement>
-    ): void => optionMoveDown(fieldId, optionId),
-    [ field.id ]
-  );
-  const onListItemMoveUp = React.useCallback(
-    (fieldId: string, optionId: string) => (
-      event: React.MouseEvent<HTMLElement>
-    ): void => optionMoveUp(fieldId, optionId),
-    [ field.id ]
-  );
-  const onListItemDelete = React.useCallback(
-    (fieldId: string, optionId: string) => (
-      event: React.MouseEvent<HTMLElement>
-    ): void => optionDelete(fieldId, optionId),
-    [ field.id ]
-  );
-
-  const onListItemChange = React.useCallback(
-    ({
-      fieldId,
-      optionId,
-      optionSettingKey
-    }: FormFieldOptionChangeArgs) => (
-      event: React.ChangeEvent<HTMLInputElement>
-    ): void => optionSettingChange({
-      fieldId,
-      optionId,
-      optionSettingKey,
-      optionSettingValue: event.target.value
-    }),
-    [ field.id ]
   );
 
   const [ fieldType, setFieldType ] = React.useState(FIELD_TYPE_SELECTOR_OPTIONS[0]);
@@ -184,11 +137,6 @@ export const FormField = observer((
                       key={order}
                       fieldId={field.id}
                       listItems={value}
-                      onListItemAdd={onListItemAdd}
-                      onListItemMoveDown={onListItemMoveDown}
-                      onListItemMoveUp={onListItemMoveUp}
-                      onListItemDelete={onListItemDelete}
-                      onListItemChange={onListItemChange}
                     />
                   );
                 }

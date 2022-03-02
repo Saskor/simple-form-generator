@@ -1,12 +1,11 @@
 import React from "react";
 import cn from "classnames";
 import {
-  FieldOption,
-  ListItemCallback
+  FieldOption
 } from "../FieldOption";
 import {
-  FormFieldOptionChangeArgs,
-  SelectOption
+  SelectOption,
+  FormConstructorService
 } from "../../services/FormConstructorModel";
 import { Button } from "../../../../shared/components/Button";
 import styles from "./ArraySettingEditor.scss";
@@ -15,24 +14,6 @@ import styles from "./ArraySettingEditor.scss";
 type ArraySettingEditorProps = {
   fieldId: string
   listItems: Array<SelectOption>;
-  // add item to some model
-  onListItemAdd: (fieldId: string) => (
-    event: React.MouseEvent<HTMLElement>
-  ) => void;
-  onListItemMoveDown: ListItemCallback;
-  onListItemMoveUp: ListItemCallback;
-  // delete row to some model
-  onListItemDelete: ListItemCallback;
-  // callback that processed changes in the ListItem
-  onListItemChange: (
-    {
-      fieldId,
-      optionId,
-      optionSettingKey
-    }: FormFieldOptionChangeArgs
-  ) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => void;
   // show delete button on the right of row controls
   showDeleteButton?: boolean;
   title?: string;
@@ -42,16 +23,16 @@ export const ArraySettingEditor = (
   {
     fieldId,
     listItems,
-    onListItemAdd,
-    onListItemMoveDown,
-    onListItemMoveUp,
-    onListItemDelete,
-    onListItemChange,
     showDeleteButton,
     title
   }: ArraySettingEditorProps
 ) => {
-  const onAddItem = React.useCallback(onListItemAdd(fieldId), [ fieldId ]);
+  const onAddItem = React.useCallback(
+    (
+      event: React.MouseEvent<HTMLElement>
+    ): void => FormConstructorService.optionAdd(fieldId),
+    [ fieldId ]
+  );
 
 
   return (
@@ -67,10 +48,6 @@ export const ArraySettingEditor = (
             <FieldOption
               key={optionId}
               selectOption={selectOption}
-              onListItemMoveDown={onListItemMoveDown}
-              onListItemMoveUp={onListItemMoveUp}
-              onListItemDelete={onListItemDelete}
-              onListItemChange={onListItemChange}
               showDeleteButton={showDeleteButton}
             />
           );
