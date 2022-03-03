@@ -23,7 +23,6 @@ export const FormItemEditor = observer((
   {
     formItem,
     formItemsType,
-    formItems,
     formConstructorModel,
     formItemTypeSelectorOptions
   }: {
