@@ -50,6 +50,7 @@ export type InputSettings = {
   label: Setting<string>;
   placeholder: Setting<string>;
   required: Setting<boolean>;
+  value: Setting<string>;
 };
 
 export type CheckBoxSettings = {
@@ -73,8 +74,6 @@ export type ButtonSettings = {
 type FormItemSettings = {
   [key: string]: { order: number, value: SettingValue };
 };
-
-type FieldOrButtonSetting = { order: number, value: SettingValue };
 
 export type FormItem = {
   id: string;

@@ -36,7 +36,7 @@ export const BooleanSettingEditor = (
         settingValue: newValue
       });
     },
-    [ formItemId, order ]
+    [ settingKey ]
   );
 
   return (<Checkbox

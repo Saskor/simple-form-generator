@@ -31,14 +31,14 @@ export const FormSettingsContainer = observer((
           <div className={cn(styles.containerFieldsSettings)}>
             {fields.map(field => (
               <FormItemEditor
-            key={field.id}
-            formItem={field}
-            formItems={fields}
-            formItemsType="fields"
-            formConstructorModel={FormConstructorService}
-            formItemTypeSelectorOptions={FIELD_TYPE_SELECTOR_OPTIONS}
-          />
-        ))}
+                key={field.id}
+                formItem={field}
+                formItems={fields}
+                formItemsType="fields"
+                formConstructorModel={FormConstructorService}
+                formItemTypeSelectorOptions={FIELD_TYPE_SELECTOR_OPTIONS}
+              />
+            ))}
           </div>
         </React.Fragment>
         )}
@@ -48,14 +48,14 @@ export const FormSettingsContainer = observer((
           <div className={cn(styles.containerFieldsSettings)}>
             {buttons.map(button => (
               <FormItemEditor
-            key={button.id}
-            formItem={button}
-            formItems={buttons}
-            formItemsType="buttons"
-            formConstructorModel={FormConstructorService}
-            formItemTypeSelectorOptions={BUTTON_TYPE_SELECTOR_OPTIONS}
-          />
-        ))}
+                key={button.id}
+                formItem={button}
+                formItems={buttons}
+                formItemsType="buttons"
+                formConstructorModel={FormConstructorService}
+                formItemTypeSelectorOptions={BUTTON_TYPE_SELECTOR_OPTIONS}
+              />
+            ))}
           </div>
         </React.Fragment>
         )}

@@ -5,13 +5,15 @@ export const Input = ({
   label,
   required = false,
   type,
-  placeholder
+  placeholder,
+  value
 }: {
   name: string,
   label: string,
   required?: boolean,
   type: "text" | "email" | "phone" | "number",
   placeholder: string
+  value: string
 }) => (
   <label>
     {label}
@@ -20,6 +22,7 @@ export const Input = ({
       name={name}
       type={type}
       required={required}
+      value={value}
     />
   </label>
 );
