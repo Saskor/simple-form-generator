@@ -7,16 +7,20 @@ import {
   DEFAULT_SELECT_OPTION_SETTINGS,
   DEFAULT_BUTTON_SETTINGS,
   DEFAULT_INPUT_SETTINGS,
-  DEFAULT_FIELDS_SETTINGS_BY_FIELD_TYPE,
+  DEFAULT_FORM_ITEMS_SETTINGS_BY_ITEM_TYPE,
   VALUE, FIELD_TYPE
 } from "../constants/FormConstructor";
 
 type ButtonType = "button" | "submit";
 export type FieldType = "text" | "email" | "phone" | "number" | "checkbox" | "select";
 
-export type FieldTypeSelectorOption = {
+export type FormItemType = FieldType | ButtonType;
+
+export type FormItemsType = "fields" | "buttons";
+
+export type FormItemTypeSelectorOption = {
   label: string;
-  value: FieldType;
+  value: FieldType | ButtonType;
 }
 export type SelectOptionSettings = {
   label: string;
@@ -39,7 +43,6 @@ type Setting<T extends string | boolean | SelectOptions> = {
   value: T;
 }
 
-export type SelectOptionSettingKey = "label" | "value";
 type SelectOptionSettingValue = string;
 
 export type InputSettings = {
@@ -67,44 +70,44 @@ export type ButtonSettings = {
   text: Setting<string>;
 };
 
-type FieldOrButtonSettings = {
+type FormItemSettings = {
   [key: string]: { order: number, value: SettingValue };
 };
 
 type FieldOrButtonSetting = { order: number, value: SettingValue };
 
-export type Field = {
+export type FormItem = {
   id: string;
-  fieldType: FieldType;
-  settings: FieldOrButtonSettings;
+  fieldType: FieldType | ButtonType;
+  settings: FormItemSettings;
 }
-export type Fields = Array<Field>
+export type FormItems = Array<FormItem>;
 
-export type Button = {
-  id: string;
-  fieldType: ButtonType;
-  settings: FieldOrButtonSettings;
-}
+export type FormItemCallback = (id: string, type: FormItemsType) => void;
 
-export type Buttons = Array<Button>;
-
-export type FieldCallback = (id: string) => void;
-
-export type FieldSettingChange = (
+export type FormItemSettingChange = (
   {
-    fieldId,
+    formItemId,
     settingKey,
-    settingValue
+    settingValue,
+    items
   }: {
-  fieldId: string;
-  settingKey: SettingKey;
-  settingValue: SettingValue | SelectOptionSettingValue;
-}) => void;
-
-export type FieldTypeChange = (
-  fieldId: string,
-  newFieldType: FieldTypeSelectorOption
+    formItemId: string;
+    settingKey: SettingKey;
+    settingValue: SettingValue | SelectOptionSettingValue;
+    items: FormItems
+  }
 ) => void;
+
+export type FormItemTypeChange = ({
+  formItemId,
+  newFormItemType,
+  type
+}: {
+  formItemId: string,
+  newFormItemType: FormItemTypeSelectorOption,
+  type: FormItemsType
+}) => void;
 
 export type OptionSettingChangeArgs = {
   fieldId: string;
@@ -131,17 +134,19 @@ export type OptionCallback = (fieldId: string, optionId: string) => void;
 
 
 export type SortSettingsNamesByOrder = (
-  settings: FieldOrButtonSettings
+  settings: FormItemSettings
 ) => Array<string>;
 
 class FormConstructorModel {
-  public fields: Fields = []
+  public fields: FormItems = []
 
-  public buttons: Buttons = []
+  public buttons: FormItems = []
 
   constructor() {
     makeAutoObservable(this);
   }
+
+  // -------------- Abstract methods ---------------------
 
   private itemShiftForward = <FieldOrSelectOption extends {id: string}>(
     itemId: string,
@@ -222,51 +227,46 @@ class FormConstructorModel {
     itemsList.filter(({ id: itemId }) => (itemId !== id))
   )
 
-  public fieldAdd = () => {
-    const newField: Field = {
-      id: uuidV4(),
-      fieldType: "text",
-      settings: DEFAULT_INPUT_SETTINGS
-    };
-    this.fields.push(newField);
-  }
+  // -------------- Form items methods ---------------------
 
-  public fieldSettingChange = (
+  public formItemSettingChange = (
     {
-      fieldId,
+      formItemId,
       settingKey,
-      settingValue
+      settingValue,
+      items
     }: {
-      fieldId: string;
+      formItemId: string;
       settingKey: SettingKey;
       settingValue: SettingValue | SelectOptionSettingValue;
+      items: FormItems
     }
   ): void => {
     const {
-      item: field
+      item: formItem
     }: {
-      item: Field
-    } = this.getItemAndItemIndexById(fieldId, this.fields);
+      item: FormItem
+    } = this.getItemAndItemIndexById(formItemId, items);
 
-    field[SETTINGS][settingKey][VALUE] = settingValue;
+    formItem[SETTINGS][settingKey][VALUE] = settingValue;
   }
 
-  public fieldMoveDown: FieldCallback = id => {
-    this.fields = this.itemShiftForward<Field>(id, this.fields);
+  public formItemMoveDown: FormItemCallback = (id, type) => {
+    this[type] = this.itemShiftForward<FormItem>(id, this[type]);
   }
 
-  public fieldMoveUp: FieldCallback = id => {
-    this.fields = this.itemShiftBackward<Field>(id, this.fields);
+  public formItemMoveUp: FormItemCallback = (id, type) => {
+    this[type] = this.itemShiftBackward<FormItem>(id, this[type]);
   }
 
-  public fieldDelete: FieldCallback = id => {
-    this.fields = this.itemDelete<Field>(id, this.fields);
+  public formItemDelete: FormItemCallback = (id, type) => {
+    this[type] = this.itemDelete<FormItem>(id, this[type]);
   }
 
-  // -------------- Select options in Field ---------------------
+  // -------------- Select options in Field methods ---------------------
 
   public optionAdd: OptionAdd = fieldId => {
-    const { item: field }: { item: Field }
+    const { item: field }: { item: FormItem }
       = this.getItemAndItemIndexById(fieldId, this.fields);
 
     const options = field[SETTINGS][OPTIONS][VALUE] as SelectOptions;
@@ -286,7 +286,7 @@ class FormConstructorModel {
       optionSettingValue
     }
   ) => {
-    const { item: field }: { item: Field }
+    const { item: field }: { item: FormItem }
       = this.getItemAndItemIndexById(fieldId, this.fields);
     const { item: option } = this.getItemAndItemIndexById<SelectOption>(
       optionId,
@@ -300,7 +300,7 @@ class FormConstructorModel {
   }
 
   public optionMoveDown: OptionCallback = (fieldId, optionId) => {
-    const { item: field }: { item: Field }
+    const { item: field }: { item: FormItem }
     = this.getItemAndItemIndexById(fieldId, this.fields);
 
     field[SETTINGS][OPTIONS][VALUE] = this.itemShiftForward<SelectOption>(
@@ -310,7 +310,7 @@ class FormConstructorModel {
   }
 
   public optionMoveUp: OptionCallback = (fieldId, optionId) => {
-    const { item: field }: { item: Field }
+    const { item: field }: { item: FormItem }
     = this.getItemAndItemIndexById(fieldId, this.fields);
 
     field[SETTINGS][OPTIONS][VALUE] = this.itemShiftBackward<SelectOption>(
@@ -320,7 +320,7 @@ class FormConstructorModel {
   }
 
   public optionDelete: OptionCallback = (fieldId, optionId) => {
-    const { item: field }: { item: Field }
+    const { item: field }: { item: FormItem }
       = this.getItemAndItemIndexById(fieldId, this.fields);
 
     field[SETTINGS][OPTIONS][VALUE] = this.itemDelete<SelectOption>(
@@ -329,68 +329,49 @@ class FormConstructorModel {
     );
   }
 
-  // -------------- Buttons Fields ---------------------
+  // -------------- Fields methods ---------------------
+
+  public fieldAdd = () => {
+    const newField: FormItem = {
+      id: uuidV4(),
+      fieldType: "text",
+      settings: DEFAULT_INPUT_SETTINGS
+    };
+    this.fields.push(newField);
+  }
+
+  // -------------- Buttons methods ---------------------
 
   public buttonAdd = () => {
-    const newButton: Button = {
+    const newButton: FormItem = {
       id: uuidV4(),
       fieldType: "button",
       settings: DEFAULT_BUTTON_SETTINGS
     };
     this.buttons.push(newButton);
   }
+  // -------------- Form item type selector ---------------------
 
-  public buttonSettingChange = (
+  public formItemTypeChange: FormItemTypeChange = (
     {
-      buttonId,
-      settingKey,
-      settingValue
-    }: {
-      buttonId: string;
-      settingKey: string;
-      settingValue: string;
+      formItemId,
+      newFormItemType,
+      type
     }
   ) => {
-    const {
-      item: button
-    }: {
-      item: Button
-    } = this.getItemAndItemIndexById(buttonId, this.buttons);
+    const { value: newFieldTypeValue } = newFormItemType;
+    const { index } = this.getItemAndItemIndexById(formItemId, this[type]);
 
-    button[SETTINGS][settingKey][VALUE] = settingValue;
-  }
-
-  public buttonMoveDown: FieldCallback = id => {
-    this.buttons = this.itemShiftForward<Button>(id, this.buttons);
-  }
-
-  public buttonMoveUp: FieldCallback = id => {
-    this.buttons = this.itemShiftBackward<Button>(id, this.buttons);
-  }
-
-  public buttonDelete: FieldCallback = id => {
-    this.buttons = this.itemDelete<Button>(id, this.buttons);
-  }
-
-  // -------------- Field type selector ---------------------
-
-  public fieldTypeChange: FieldTypeChange = (
-    fieldId,
-    newFieldType
-  ) => {
-    const { value: newFieldTypeValue } = newFieldType;
-    const { index } = this.getItemAndItemIndexById(fieldId, this.fields);
-
-    const newField = {
-      id: fieldId,
+    const newFormItem = {
+      id: formItemId,
       [FIELD_TYPE]: newFieldTypeValue,
-      [SETTINGS]: DEFAULT_FIELDS_SETTINGS_BY_FIELD_TYPE[newFieldTypeValue]
+      [SETTINGS]: DEFAULT_FORM_ITEMS_SETTINGS_BY_ITEM_TYPE[newFieldTypeValue]
     };
 
-    this.fields[index] = newField;
+    this[type][index] = newFormItem;
   }
 
-  // -------------- Prepare field settings to render in constructor ---------------------
+  // -------------- Prepare form item settings to render in constructor ---------------------
 
   public sortSettingsNamesByOrder: SortSettingsNamesByOrder = settings => (
     Object.keys(settings).sort(

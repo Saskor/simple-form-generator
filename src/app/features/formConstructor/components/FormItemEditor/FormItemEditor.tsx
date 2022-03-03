@@ -2,38 +2,45 @@ import React from "react";
 import { observer } from "mobx-react";
 import cn from "classnames";
 import {
-  Field,
-  FieldType,
-  FormConstructorServiceType
+  FormItem,
+  FormItems,
+  FormItemType,
+  FormConstructorServiceType,
+  FormItemTypeSelectorOption, FormItemsType
 } from "../../services/FormConstructorModel";
 import {
-  DEFAULT_FIELDS_SETTINGS_BY_FIELD_TYPE,
-  FIELD_TYPE_SELECTOR_OPTIONS,
+  DEFAULT_FORM_ITEMS_SETTINGS_BY_ITEM_TYPE,
   SETTINGS
 } from "../../constants/FormConstructor";
 import { ManageButtons } from "../ManageButtons";
 import { StringSettingEditor } from "../StringSettingEditor";
 import { BooleanSettingEditor } from "../BbooleanSettingEditor";
 import { ArraySettingEditor } from "../ArraySettingEditor";
-import styles from "./FormField.scss";
+import styles from "./FormItemEditor.scss";
 import { Selector } from "app/shared/components/Selector";
 
-export const FormField = observer((
+export const FormItemEditor = observer((
   {
-    field,
-    formConstructorModel
+    formItem,
+    formItemsType,
+    formItems,
+    formConstructorModel,
+    formItemTypeSelectorOptions
   }: {
-    field: Field,
-    formConstructorModel: FormConstructorServiceType
+    formItem: FormItem,
+    formItemsType: FormItemsType;
+    formItems: FormItems,
+    formConstructorModel: FormConstructorServiceType,
+    formItemTypeSelectorOptions: Array<FormItemTypeSelectorOption>
   }
 ) => {
 
   const {
-    fieldSettingChange,
-    fieldTypeChange,
-    fieldDelete,
-    fieldMoveUp,
-    fieldMoveDown,
+    formItemSettingChange,
+    formItemTypeChange,
+    formItemDelete,
+    formItemMoveUp,
+    formItemMoveDown,
     sortSettingsNamesByOrder
   } = formConstructorModel;
 
@@ -44,7 +51,7 @@ export const FormField = observer((
   const [
     fieldType,
     setFieldType
-  ] = React.useState(FIELD_TYPE_SELECTOR_OPTIONS[0]);
+  ] = React.useState(formItemTypeSelectorOptions[0]);
   const [
     sortedSettingsNames,
     setSortedSettingsNames
@@ -52,38 +59,44 @@ export const FormField = observer((
 
   React.useEffect(() => {
     setSortedSettingsNames(
-      sortSettingsNamesByOrder(field.settings)
+      sortSettingsNamesByOrder(formItem.settings)
     );
-  }, []);
+  }, [ formItem.id ]);
 
   const moveUp = React.useCallback(
-    () => fieldMoveUp(field.id), [ field.id ]
+    () => formItemMoveUp(formItem.id, formItemsType), [ formItem.id ]
   );
   const moveDown = React.useCallback(
-    () => fieldMoveDown(field.id), [ field.id ]
+    () => formItemMoveDown(formItem.id, formItemsType), [ formItem.id ]
   );
   const toggleEdit = React.useCallback(
     () => {
       setEditFormShow(prevEditFormShow => !prevEditFormShow);
-    }, [ field.id ]
+    }, [ formItem.id ]
   );
   const onDelete = React.useCallback(
-    () => fieldDelete(field.id), [ field.id ]
+    () => formItemDelete(formItem.id, formItemsType), [ formItem.id ]
   );
-  const onFieldTypeChange = React.useCallback(
+  const onFormItemTypeChange = React.useCallback(
     newValue => {
       setFieldType(newValue);
-      const newFieldType: FieldType = newValue.value;
-      const newSettings = DEFAULT_FIELDS_SETTINGS_BY_FIELD_TYPE[newFieldType];
+      const newFieldType: FormItemType = newValue.value;
+      const newSettings = DEFAULT_FORM_ITEMS_SETTINGS_BY_ITEM_TYPE[newFieldType];
       setSortedSettingsNames(
         sortSettingsNamesByOrder(newSettings)
       );
-      fieldTypeChange(field.id, newValue);
-    }, [ field.id ]
+      formItemTypeChange(
+        {
+          formItemId: formItem.id,
+          newFormItemType: newValue,
+          type: formItemsType
+        }
+      );
+    }, [ formItem.id ]
   );
 
   return (
-    <div className={cn(styles.field)} key={field.id}>
+    <div className={cn(styles.field)} key={formItem.id}>
       <ManageButtons
         moveUp={moveUp}
         moveDown={moveDown}
@@ -94,24 +107,25 @@ export const FormField = observer((
       {editFormShow
       && (
         <React.Fragment>
-          <Selector
+          <Selector<FormItemTypeSelectorOption>
             label="Field type"
             value={fieldType}
-            options={FIELD_TYPE_SELECTOR_OPTIONS}
-            onChange={onFieldTypeChange}
+            options={formItemTypeSelectorOptions}
+            onChange={onFormItemTypeChange}
           />
           <div className={cn(styles.settings)}>
             {sortedSettingsNames.map(
               settingName => {
-                const setting = field[SETTINGS][settingName];
+                const setting = formItem[SETTINGS][settingName];
                 const { order, value } = setting;
 
                 if (typeof value === "string") {
                   return (
                     <StringSettingEditor
                       key={order}
-                      fieldId={field.id}
-                      fieldSettingChange={fieldSettingChange}
+                      formItems={formItems}
+                      formItemId={formItem.id}
+                      formItemSettingChange={formItemSettingChange}
                       settingKey={settingName}
                       value={value}
                       order={order}
@@ -123,8 +137,9 @@ export const FormField = observer((
                   return (
                     <BooleanSettingEditor
                       key={order}
-                      fieldId={field.id}
-                      fieldSettingChange={fieldSettingChange}
+                      formItems={formItems}
+                      formItemId={formItem.id}
+                      formItemSettingChange={formItemSettingChange}
                       settingKey={settingName}
                       value={value}
                       order={order}
@@ -136,7 +151,7 @@ export const FormField = observer((
                   return (
                     <ArraySettingEditor
                       key={order}
-                      fieldId={field.id}
+                      fieldId={formItem.id}
                       listItems={value}
                     />
                   );

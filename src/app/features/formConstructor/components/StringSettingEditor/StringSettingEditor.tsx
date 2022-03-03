@@ -1,13 +1,15 @@
 import React from "react";
 import {
   SettingKey,
-  FieldSettingChange
+  FormItemSettingChange,
+  FormItems
 } from "../../services/FormConstructorModel";
 import { Input } from "app/shared/components/Input";
 
 export type StringSettingEditorProps = {
-  fieldId: string;
-  fieldSettingChange: FieldSettingChange;
+  formItemId: string;
+  formItems: FormItems;
+  formItemSettingChange: FormItemSettingChange;
   settingKey: string;
   value: string;
   order: number;
@@ -15,8 +17,9 @@ export type StringSettingEditorProps = {
 
 export const StringSettingEditor = (
   {
-    fieldId,
-    fieldSettingChange,
+    formItemId,
+    formItems,
+    formItemSettingChange,
     settingKey,
     value,
     order
@@ -25,13 +28,14 @@ export const StringSettingEditor = (
   const onChange = React.useCallback(
     event => {
       const newValue = event.target.value;
-      fieldSettingChange({
-        fieldId,
+      formItemSettingChange({
+        formItemId,
+        items: formItems,
         settingKey: settingKey as SettingKey,
         settingValue: newValue
       });
     },
-    [ fieldId, order ]
+    [ formItemId, order ]
   );
 
   return (<Input

@@ -1,10 +1,11 @@
 import React from "react";
-import { FieldSettingChange, SettingKey } from "../../services/FormConstructorModel";
+import { FormItems, FormItemSettingChange, SettingKey } from "../../services/FormConstructorModel";
 import { Checkbox } from "app/shared/components/Checkbox";
 
 export type BooleanSettingEditorProps = {
-  fieldId: string;
-  fieldSettingChange: FieldSettingChange;
+  formItemId: string;
+  formItems: FormItems;
+  formItemSettingChange: FormItemSettingChange;
   settingKey: string;
   value: boolean;
   order: number;
@@ -13,8 +14,9 @@ export type BooleanSettingEditorProps = {
 
 export const BooleanSettingEditor = (
   {
-    fieldId,
-    fieldSettingChange,
+    formItemId,
+    formItems,
+    formItemSettingChange,
     settingKey,
     value,
     order
@@ -23,13 +25,14 @@ export const BooleanSettingEditor = (
   const onChange = React.useCallback(
     event => {
       const newValue = event.target.checked;
-      fieldSettingChange({
-        fieldId,
+      formItemSettingChange({
+        formItemId,
+        items: formItems,
         settingKey: settingKey as SettingKey,
         settingValue: newValue
       });
     },
-    [ fieldId, order ]
+    [ formItemId, order ]
   );
 
   return (<Checkbox

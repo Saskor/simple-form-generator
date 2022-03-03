@@ -208,7 +208,7 @@ module.exports = {
     "function-call-argument-newline": [ "error", "consistent" ],
     "function-paren-newline": [ "error", "consistent" ],
     "implicit-arrow-linebreak": [ "error", "beside" ],
-    indent: [ "error", 2 ],
+    indent: [ "error", 2, { ignoredNodes: [ "JSXElement *", "JSXElement" ] } ],
     "jsx-quotes": [ "error", "prefer-double" ],
     "key-spacing": [ "error", { beforeColon: false } ],
     "keyword-spacing": [ "error", { before: true, after: true } ],

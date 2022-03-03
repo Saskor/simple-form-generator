@@ -3,7 +3,7 @@ import type {
   CheckBoxSettings,
   SelectSettings,
   SelectOptionSettings,
-  ButtonSettings
+  ButtonSettings, FormItemTypeSelectorOption
 } from "../services/FormConstructorModel";
 
 export const SETTINGS = "settings";
@@ -45,7 +45,7 @@ export const DEFAULT_BUTTON_SETTINGS: ButtonSettings = {
   text: { order: 0, value: "" }
 };
 
-export const FIELD_TYPE_SELECTOR_OPTIONS = [
+export const FIELD_TYPE_SELECTOR_OPTIONS: Array<FormItemTypeSelectorOption> = [
   { label: "Text", value: "text" },
   { label: "Email", value: "email" },
   { label: "Phone", value: "phone" },
@@ -54,14 +54,21 @@ export const FIELD_TYPE_SELECTOR_OPTIONS = [
   { label: "Select", value: "select" }
 ];
 
-export const DEFAULT_FIELDS_SETTINGS_BY_FIELD_TYPE = {
+export const BUTTON_TYPE_SELECTOR_OPTIONS: Array<FormItemTypeSelectorOption> = [
+  { label: "Submit", value: "submit" },
+  { label: "Button", value: "button" }
+];
+
+export const DEFAULT_FORM_ITEMS_SETTINGS_BY_ITEM_TYPE = {
   text: DEFAULT_INPUT_SETTINGS,
   email: DEFAULT_INPUT_SETTINGS,
   phone: DEFAULT_INPUT_SETTINGS,
   number: DEFAULT_INPUT_SETTINGS,
-
   checkbox: DEFAULT_CHECKBOX_SETTINGS,
-  select: DEFAULT_SELECT_SETTINGS
+  select: DEFAULT_SELECT_SETTINGS,
+
+  button: DEFAULT_BUTTON_SETTINGS,
+  submit: DEFAULT_BUTTON_SETTINGS
 };
 
 
