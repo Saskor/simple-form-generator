@@ -90,12 +90,12 @@ export type FormItemSettingChange = (
     formItemId,
     settingKey,
     settingValue,
-    items
+    formItemsType
   }: {
     formItemId: string;
     settingKey: SettingKey;
     settingValue: SettingValue | SelectOptionSettingValue;
-    items: FormItems
+    formItemsType: FormItemsType
   }
 ) => void;
 
@@ -234,19 +234,19 @@ class FormConstructorModel {
       formItemId,
       settingKey,
       settingValue,
-      items
+      formItemsType
     }: {
       formItemId: string;
       settingKey: SettingKey;
       settingValue: SettingValue | SelectOptionSettingValue;
-      items: FormItems
+      formItemsType: FormItemsType
     }
   ): void => {
     const {
       item: formItem
     }: {
       item: FormItem
-    } = this.getItemAndItemIndexById(formItemId, items);
+    } = this.getItemAndItemIndexById(formItemId, this[formItemsType]);
 
     formItem[SETTINGS][settingKey][VALUE] = settingValue;
   }

@@ -28,7 +28,7 @@ export const FormItemEditor = observer((
     formItemTypeSelectorOptions
   }: {
     formItem: FormItem,
-    formItemsType: FormItemsType;
+    formItemsType: FormItemsType,
     formItems: FormItems,
     formConstructorModel: FormConstructorServiceType,
     formItemTypeSelectorOptions: Array<FormItemTypeSelectorOption>
@@ -123,7 +123,7 @@ export const FormItemEditor = observer((
                   return (
                     <StringSettingEditor
                       key={order}
-                      formItems={formItems}
+                      formItemsType={formItemsType}
                       formItemId={formItem.id}
                       formItemSettingChange={formItemSettingChange}
                       settingKey={settingName}
@@ -137,7 +137,7 @@ export const FormItemEditor = observer((
                   return (
                     <BooleanSettingEditor
                       key={order}
-                      formItems={formItems}
+                      formItemsType={formItemsType}
                       formItemId={formItem.id}
                       formItemSettingChange={formItemSettingChange}
                       settingKey={settingName}

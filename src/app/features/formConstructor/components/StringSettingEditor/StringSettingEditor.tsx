@@ -2,13 +2,13 @@ import React from "react";
 import {
   SettingKey,
   FormItemSettingChange,
-  FormItems
+  FormItemsType
 } from "../../services/FormConstructorModel";
 import { Input } from "app/shared/components/Input";
 
 export type StringSettingEditorProps = {
   formItemId: string;
-  formItems: FormItems;
+  formItemsType: FormItemsType;
   formItemSettingChange: FormItemSettingChange;
   settingKey: string;
   value: string;
@@ -18,7 +18,7 @@ export type StringSettingEditorProps = {
 export const StringSettingEditor = (
   {
     formItemId,
-    formItems,
+    formItemsType,
     formItemSettingChange,
     settingKey,
     value,
@@ -30,7 +30,7 @@ export const StringSettingEditor = (
       const newValue = event.target.value;
       formItemSettingChange({
         formItemId,
-        items: formItems,
+        formItemsType,
         settingKey: settingKey as SettingKey,
         settingValue: newValue
       });

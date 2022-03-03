@@ -1,10 +1,14 @@
 import React from "react";
-import { FormItems, FormItemSettingChange, SettingKey } from "../../services/FormConstructorModel";
+import {
+  FormItemsType,
+  FormItemSettingChange,
+  SettingKey
+} from "../../services/FormConstructorModel";
 import { Checkbox } from "app/shared/components/Checkbox";
 
 export type BooleanSettingEditorProps = {
   formItemId: string;
-  formItems: FormItems;
+  formItemsType: FormItemsType;
   formItemSettingChange: FormItemSettingChange;
   settingKey: string;
   value: boolean;
@@ -15,7 +19,7 @@ export type BooleanSettingEditorProps = {
 export const BooleanSettingEditor = (
   {
     formItemId,
-    formItems,
+    formItemsType,
     formItemSettingChange,
     settingKey,
     value,
@@ -27,7 +31,7 @@ export const BooleanSettingEditor = (
       const newValue = event.target.checked;
       formItemSettingChange({
         formItemId,
-        items: formItems,
+        formItemsType,
         settingKey: settingKey as SettingKey,
         settingValue: newValue
       });
