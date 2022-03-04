@@ -1,9 +1,5 @@
 import React from "react";
-
-type Option = {
-  label: string,
-  value: string
-};
+import { SelectOption } from "../../services/FormConstructorModel";
 
 export const Select = ({
   name,
@@ -14,13 +10,13 @@ export const Select = ({
   name: string,
   label: string,
   required?: boolean,
-  options: Array<Option>
+  options: Array<SelectOption>
 }) => (
   <label>
     {labelText}
     <select name={name} required={required}>
-      {options.map(({ label, value }) => (
-        <option value={value}>
+      {options.map(({ id, settings: { label, value } }) => (
+        <option key={id} value={value}>
           {label}
         </option>
       ))}

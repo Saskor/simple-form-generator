@@ -34,7 +34,7 @@ export type SelectOption = {
 type SelectOptions = Array<SelectOption>;
 
 export type SettingKey = "name" | "label" | "checked" | "required" | "text" | "placeholder" | "options";
-type SettingValue = string | boolean | SelectOptions;
+export type SettingValue = string | boolean | SelectOptions;
 type Setting<T extends string | boolean | SelectOptions> = {
   // You can define component for edit setting explicitly
   editingComponent?: () => ReactElement,

@@ -1,7 +1,11 @@
 import React from "react";
 import { observer } from "mobx-react";
 import cn from "classnames";
-import { FormConstructorServiceType, FormItem } from "../../services/FormConstructorModel";
+import {
+  FormConstructorServiceType,
+  FormItem,
+  SettingValue
+} from "../../services/FormConstructorModel";
 import { FORM_ITEMS_RENDER_COMPONENT_BY_ITEM_TYPE, VALUE } from "../../constants/FormConstructor";
 import styles from "./FormLayout.scss";
 
@@ -24,12 +28,12 @@ export const FormLayout = observer((
       settings
     } = field;
     const Component = FORM_ITEMS_RENDER_COMPONENT_BY_ITEM_TYPE[fieldType];
-    const props = {};
+    const props: { [key: string]: SettingValue } = {};
 
-    for (const key in settings) {
-      if (settings[key]) {
-        props[key] = settings[key][VALUE];
-      }
+    const settingsKeys = Object.keys(settings);
+    for (let i = 0; i < settingsKeys.length; i++) {
+      const key = settingsKeys[i];
+      props[key] = settings[key][VALUE];
     }
 
     return (
@@ -39,9 +43,13 @@ export const FormLayout = observer((
 
 
   return (
-    <div>
-      {fields.map(mapCallback)}
-      {buttons.map(mapCallback)}
+    <div className={cn(styles.formItemsContainer)}>
+      <div className={cn(styles.fields)}>
+        {fields.map(mapCallback)}
+      </div>
+      <div className={cn(styles.buttons)}>
+        {buttons.map(mapCallback)}
+      </div>
     </div>
   );
 });
