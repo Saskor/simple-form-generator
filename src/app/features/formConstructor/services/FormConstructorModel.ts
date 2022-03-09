@@ -8,8 +8,11 @@ import {
   DEFAULT_BUTTON_SETTINGS,
   DEFAULT_INPUT_SETTINGS,
   DEFAULT_FORM_ITEMS_SETTINGS_BY_ITEM_TYPE,
-  VALUE, FIELD_TYPE
+  VALUE,
+  FIELD_TYPE
 } from "../constants/FormConstructor";
+
+import { FormStyles } from "../constants/FormStyles";
 
 type ButtonType = "button" | "submit";
 export type FieldType = "text" | "email" | "phone" | "number" | "checkbox" | "select";
@@ -140,6 +143,8 @@ class FormConstructorModel {
   public fields: FormItems = []
 
   public buttons: FormItems = []
+
+  public formLayout = ""
 
   constructor() {
     makeAutoObservable(this);
@@ -382,6 +387,38 @@ class FormConstructorModel {
       )
     )
   )
+
+  // -------------- Save form in a separate file utils ---------------------
+
+  private getSelectors = (styles: FormStyles): Array<string> => (
+    Object.keys(styles).sort(
+      (aKey, bKey) => (
+        styles[aKey].order - styles[bKey].order
+      )
+    ));
+
+  public getFormStylesString = (
+    styles: FormStyles
+  ): string => this.getSelectors(styles).reduce(
+    (acc, selector) => {
+      const selectorStyles = styles[selector][VALUE];
+      let stylesString = "";
+
+      for (const styleKey in selectorStyles) {
+        if (styleKey in selectorStyles) {
+          const styleValue = selectorStyles[styleKey];
+          stylesString += `${styleKey}:${styleValue};`;
+        }
+      }
+
+      return `.${selector}{${stylesString}}`;
+    },
+    ""
+  );
+
+  public updateFormLayout = (value: string): void => {
+    this.formLayout = value;
+  }
 }
 
 export const FormConstructorService = new FormConstructorModel();

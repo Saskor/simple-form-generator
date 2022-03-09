@@ -20,8 +20,31 @@ export const FormSettingsContainer = observer((
     fields,
     buttons,
     fieldAdd,
-    buttonAdd
+    buttonAdd,
+    formLayout
   } = formConstructorModel;
+
+  const saveFormToFile = React.useCallback(
+    () => {
+      // create blob
+      const myBlob = new Blob(
+        [ formLayout ],
+        { type: "text/plain" }
+      );
+
+      // create download link
+      const url = window.URL.createObjectURL(myBlob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = "form.html";
+
+      // force download
+      anchor.click();
+      window.URL.revokeObjectURL(url);
+      document.removeChild(anchor);
+    },
+    [ formLayout ]
+  );
 
   return (
     <div className={cn(styles.container)}>
@@ -71,6 +94,13 @@ export const FormSettingsContainer = observer((
           text="Add button"
           classNames={cn(styles.addButton)}
           onClick={buttonAdd}
+        />
+
+        <Button
+          type={"button"}
+          text="Export form"
+          classNames={cn(styles.addButton)}
+          onClick={saveFormToFile}
         />
       </ div>
     </ div>
