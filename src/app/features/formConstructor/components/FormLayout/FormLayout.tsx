@@ -1,6 +1,5 @@
 import React from "react";
 import { observer } from "mobx-react";
-import cn from "classnames";
 import ReactDOMServer from "react-dom/server";
 import {
   FormConstructorServiceType,
@@ -12,7 +11,6 @@ import {
   VALUE
 } from "../../constants/FormConstructor";
 import { FormStyles } from "../../constants/FormStyles";
-import styles from "./FormLayout.scss";
 
 export const FormLayout = observer((
   {
@@ -63,26 +61,24 @@ export const FormLayout = observer((
     );
   };
 
-  const form = (
+  const Form = () => (
     <form>
       <style
         dangerouslySetInnerHTML={{ __html: getFormStylesString(FormStyles) }}
       />
-      <div className={cn(styles.formItemsContainer)}>
-        <div className={cn(styles.fields)}>
+      <div className="form-1f0ad824-cbcf83aba5ac-form-items-container">
+        <div className="form-1f0ad824-cbcf83aba5ac-fields">
           {fields.map(mapCallback)}
         </div>
-        <div className={cn(styles.buttons)}>
+        <div className="form-1f0ad824-cbcf83aba5ac-buttons">
           {buttons.map(mapCallback)}
         </div>
       </div>
     </form>
   );
 
-  React.useEffect(() => {
-    const formString = ReactDOMServer.renderToStaticMarkup(form);
-    updateFormLayout(formString);
-  }, [ fields.length, buttons.length ]);
+  const formString = ReactDOMServer.renderToStaticMarkup(<Form />);
+  updateFormLayout(formString);
 
-  return form;
+  return <Form />;
 });

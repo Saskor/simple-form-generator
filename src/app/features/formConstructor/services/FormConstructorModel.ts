@@ -411,7 +411,7 @@ class FormConstructorModel {
         }
       }
 
-      return `.${selector}{${stylesString}}`;
+      return `${acc}${selector}{${stylesString}}`;
     },
     ""
   );
