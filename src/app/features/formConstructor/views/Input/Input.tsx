@@ -15,7 +15,7 @@ export const Input = ({
   placeholder: string
   value: string
 }) => (
-  <label>
+  <label className="form-1f0ad824-cbcf83aba5ac">
     {label}
     <input
       placeholder={placeholder}

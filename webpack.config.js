@@ -1,4 +1,5 @@
 const path = require("path");
+const loaderUtils = require("loader-utils");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
@@ -39,7 +40,37 @@ const cssLoaders = (extra = "") => {
       options: {
         importLoaders: 1,
         modules: {
-          localIdentName: "[name]__[local]--[hash:base64:5]"
+          localIdentName: "[name]__[local]--[hash:base64:5]",
+          getLocalIdent: (loaderContext, localIdentName, localName, options) => {
+            if (!options.context) {
+              // eslint-disable-next-line no-param-reassign
+              options.context = loaderContext.rootContext;
+            }
+
+            const request = path.
+              relative(options.context, loaderContext.resourcePath).
+              replace(/\\/g, "/");
+
+            // eslint-disable-next-line no-param-reassign
+            options.content = `${options.hashPrefix + request}+${localName}`;
+
+            // eslint-disable-next-line no-param-reassign
+            localIdentName = localIdentName.replace(/\[local\]/gi, localName);
+
+            const hash = loaderUtils.interpolateName(
+              loaderContext,
+              localIdentName,
+              options
+            );
+
+            const localNameNoNeedToBeChanged = (
+              /^form-1f0ad824-cbcf83aba5ac/
+            ).test(localName);
+
+            return localNameNoNeedToBeChanged ? localName : hash.
+              replace(new RegExp("[^a-zA-Z0-9\\-_\u00A0-\uFFFF]", "g"), "-").
+              replace(/^((-?[0-9])|--)/, "_$1");
+          }
         }
       }
     }
