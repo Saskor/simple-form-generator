@@ -415,10 +415,6 @@ class FormConstructorModel {
     },
     ""
   );
-
-  public updateFormLayout = (value: string): void => {
-    this.formLayout = value;
-  }
 }
 
 export const FormConstructorService = new FormConstructorModel();

@@ -16,6 +16,7 @@ export const OPTIONS = "options";
 export const FIELD_TYPE = "fieldType";
 export const LABEL = "label";
 export const VALUE = "value";
+export const CHECKED = "checked";
 
 export const DEFAULT_INPUT_SETTINGS: InputSettings = {
   name: { order: 0, value: "" },

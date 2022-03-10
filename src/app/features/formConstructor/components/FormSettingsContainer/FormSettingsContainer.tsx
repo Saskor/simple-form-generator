@@ -1,6 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 import cn from "classnames";
+import ReactDOMServer from "react-dom/server";
 import {
   FormConstructorService,
   FormConstructorServiceType
@@ -10,6 +11,7 @@ import {
   FIELD_TYPE_SELECTOR_OPTIONS,
   BUTTON_TYPE_SELECTOR_OPTIONS
 } from "../../constants/FormConstructor";
+import { FormLayout } from "../FormLayout";
 import styles from "./FormSettingsContainer.scss";
 import { Button } from "app/shared/components/Button";
 
@@ -26,9 +28,15 @@ export const FormSettingsContainer = observer((
 
   const saveFormToFile = React.useCallback(
     () => {
+      const formLayoutString = ReactDOMServer.renderToStaticMarkup(
+        <FormLayout
+          formConstructorModel={formConstructorModel}
+          exportMode
+        />
+      );
       // create blob
       const myBlob = new Blob(
-        [ formLayout ],
+        [ formLayoutString ],
         { type: "text/plain" }
       );
 
