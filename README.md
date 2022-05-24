@@ -1,14 +1,20 @@
-Functions that have more than two arguments must destruct arguments values from the object
-Examples:
+**HTML forms generator.**
 
-More than two arguments
-({arg1, arg2, arg3}) => {...}
+User of it application can:
+setup each field and button in the form;
+add, edit, delete fields and buttons;
+save generated form as valid HTML form with styles to a separate file and use it on own website (for instance, e-commerce shop).
 
-Two or fever arguments
-(arg1, arg2) => {...}
+A form can contain next types of fields:
+text;
+email;
+phone;
+number;
+checkbox;
+select;
+button.
+
+Technical stack is React, Typescript, MobX.
 
 
-Difference between view and component
-
-View render only one HTML tag (input, button, ets.)
-View has no inner state.
+Webpack settings made not perfect but it made from scratch.
